@@ -640,6 +640,6 @@ class GestionScolaire {
     }
 }
 
-// Lancement
+// Lancement du programme
 let gestion = GestionScolaire()
 gestion.demarrer()
