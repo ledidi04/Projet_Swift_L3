@@ -414,7 +414,9 @@ class GestionScolaire {
         }
         
         func afficherSolde() {
-            print("\nSOLDE ACTUEL: \(String(format: "%.2f", calculerSolde())) HTG")
+             let solde = calculerSolde()
+            let statut = solde >= 0 ? "Positif" : "Négatif"
+            print("\nSOLDE ACTUEL: \(String(format: "%.2f", solde)) HTG (\(statut))")
         }
         
         func enregistrerPaiementEtudiant() {
