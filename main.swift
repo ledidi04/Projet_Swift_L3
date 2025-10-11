@@ -245,9 +245,26 @@ class GestionScolaire {
             continuer = demanderContinuer(action: "ajouter un étudiant")
         }
     }
-    
-   
-    
+
+
+    //fonction permettant de Lister Tous les Etudiants
+    func listerEtudiants() {
+        print("\nLISTE DES ÉTUDIANTS (\(etudiants.count))")
+        guard !etudiants.isEmpty else {
+            print("Aucun étudiant enregistré.")
+            return
+        }
+        
+        for etudiant in etudiants {
+            let moyenne = calculerMoyenneGenerale(etudiantId: etudiant.id) ?? 0
+            let moyenneAffichage = moyenne > 0 ? String(format: "%.2f", moyenne) : "Aucune note"
+            let statutPaiement = etudiant.estEnRegle ? "Oui" : "Non"
+            print("ID: \(etudiant.id) | \(etudiant.prenom) \(etudiant.nom) | \(etudiant.classe.nom) | Moyenne: \(moyenneAffichage) | En règle avec l'économat : \(statutPaiement)")
+        }
+    }
+
+
+    //fonction Permettant de Lister Les Etudiants Par Classe
     func listerEtudiantsParClasse() {
         guard !classes.isEmpty else {
             print("\nAucune classe configurée.")
