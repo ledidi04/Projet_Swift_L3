@@ -35,6 +35,7 @@ class Etudiant {
     
     var montantDu: Double { classe.frais }
     var resteAPayer: Double { montantDu - montantPaye }
+    var estEnRegle: Bool { resteAPayer <= 0 }
     
     init(id: Int, nom: String, prenom: String, adresse: String, sexe: String, classe: Classe) {
         self.id = id
@@ -246,7 +247,7 @@ class GestionScolaire {
     }
     
     func listerEtudiants() {
-        print("\n=== LISTE DES ÉTUDIANTS (\(etudiants.count)) ===")
+        print("\nLISTE DES ÉTUDIANTS (\(etudiants.count))")
         guard !etudiants.isEmpty else {
             print("Aucun étudiant enregistré.")
             return
@@ -255,7 +256,8 @@ class GestionScolaire {
         for etudiant in etudiants {
             let moyenne = calculerMoyenneGenerale(etudiantId: etudiant.id) ?? 0
             let moyenneAffichage = moyenne > 0 ? String(format: "%.2f", moyenne) : "Aucune note"
-            print("ID: \(etudiant.id) | \(etudiant.prenom) \(etudiant.nom) | \(etudiant.sexe) | \(etudiant.classe.nom) | Moyenne: \(moyenneAffichage)")
+            let statutPaiement = etudiant.estEnRegle ? "Oui" : "Non"
+            print("ID: \(etudiant.id) | \(etudiant.prenom) \(etudiant.nom) | \(etudiant.classe.nom) | Moyenne: \(moyenneAffichage) | En règle avec l'économat : \(statutPaiement)")
         }
     }
     
