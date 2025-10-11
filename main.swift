@@ -270,10 +270,25 @@ class GestionScolaire {
         var continuer = true
         while continuer {
             print("\n=== LISTER ÉTUDIANTS PAR CLASSE ===")
-            guard let classe = choisirClasse() else { 
+            // Afficher les classes sans frais
+            print("\n=== CLASSES DISPONIBLES ===")
+            if classes.isEmpty {
+                print("Aucune classe configurée")
+            } else {
+                for (index, classe) in classes.enumerated() {
+                    print("\(index + 1). \(classe.nom)")
+                }
+            }
+
+            print("\nChoisir une classe (numéro):", terminator: " ")
+            guard let input = readLine(), 
+                let choix = Int(input),
+                choix >= 1 && choix <= classes.count else {
+                print("Choix invalide.")
                 continuer = demanderContinuer(action: "lister les étudiants")
                 continue
             }
+            let classe = classes[choix - 1]
             
             let etudiantsClasse = etudiants.filter { $0.classe.nom == classe.nom }
             print("\n=== ÉTUDIANTS DE \(classe.nom) (\(etudiantsClasse.count)) ===")
