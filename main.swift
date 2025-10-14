@@ -618,29 +618,34 @@ class GestionScolaire {
     }
     
    func afficherTransactions() {
-        print("\n=== LISTE DES TRANSACTIONS (\(transactions.count)) ===")
+        print("\n=== HISTORIQUE DES TRANSACTIONS (\(transactions.count)) ===")
         if transactions.isEmpty {
-            print("Aucune transaction")
+            print("Aucune transaction enregistrée")
         } else {
-            // Formateur de date
             let formatter = DateFormatter()
             formatter.dateFormat = "dd/MM/yyyy HH:mm"
             
             for transaction in transactions {
                 let signe = transaction.type == "entree" ? "+" : "-"
+                let typeDescription = transaction.type == "entree" ? "ENTREE" : "SORTIE"
+                
                 let etudiantInfo: String
                 if let etudiantId = transaction.etudiantId,
-                let etudiant = rechercherEtudiant(id: etudiantId) {
-                    etudiantInfo = " (\(etudiant.prenom) \(etudiant.nom))"
+                   let etudiant = rechercherEtudiant(id: etudiantId) {
+                    etudiantInfo = "Etudiant: \(etudiant.prenom) \(etudiant.nom)"
                 } else {
-                    etudiantInfo = ""
+                    etudiantInfo = "Operation generale"
                 }
                 
                 let dateFormatee = formatter.string(from: transaction.date)
-                print("\(transaction.id) | \(dateFormatee) | \(signe)\(String(format: "%.2f", transaction.montant)) HTG | \(etudiantInfo)")
+                print("""
+                #\(transaction.id) | \(dateFormatee) | \(typeDescription)
+                \(etudiantInfo)
+                \(signe) \(String(format: "%.2f", transaction.montant)) HTG | \(transaction.description)
+                ---
+                """)
             }
         }
-
     }
     
     // MARK: - Point d'entrée
