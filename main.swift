@@ -166,7 +166,7 @@ class GestionScolaire {
     
     func configurerMatieresPourClasse() {
         guard !classes.isEmpty else {
-            print("\n❌ Aucune classe configurée. Veuillez d'abord configurer une classe.")
+            print("\nAucune classe configurée. Veuillez d'abord configurer une classe.")
             return
         }
         
@@ -401,10 +401,16 @@ class GestionScolaire {
         
         // MARK: - Gestion financière
         func ajouterTransaction(description: String, montant: Double, type: String, etudiantId: Int? = nil) {
-            let transaction = Transaction(id: nextTransactionId, description: description, montant: montant, type: type, etudiantId: etudiantId)
+            let transaction = Transaction(
+                id: nextTransactionId, 
+                description: description, 
+                montant: montant, 
+                type: type, 
+                etudiantId: etudiantId
+            )
             transactions.append(transaction)
             nextTransactionId += 1
-            print("Transaction enregistree")        
+            print("SUCCES: Transaction #\(nextTransactionId-1) enregistrée")
         }
         
         func calculerSolde() -> Double {
