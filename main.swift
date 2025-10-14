@@ -74,7 +74,7 @@ class GestionScolaire {
     private var nextEtudiantId = 1
     private var nextTransactionId = 1
     
-    // MARK: - Fonctions utilitaires sécurisées
+    // MARK: - Fonctions utilitaires 
     func saisirChampObligatoire(_ nomChamp: String) -> String {
         while true {
             print("\(nomChamp):", terminator: " ")
@@ -203,16 +203,16 @@ class GestionScolaire {
     // MARK: - Gestion des étudiants
     func ajouterEtudiant() {
         guard !classes.isEmpty else {
-            print("\nAucune classe configurée. Veuillez d'abord configurer une classe.")
+            print("\n❌ Aucune classe configurée. Veuillez d'abord configurer une classe.")
             return
         }
         
         var continuer = true
         while continuer {
-            print("\n=== NOUVEL ÉTUDIANT ===")
-            let nom = saisirChampObligatoire("Nom")
+            print("\n=== INSCRIPTION D'UN NOUVEL ÉTUDIANT ===")
+            let nom = saisirChampObligatoire("Nom de famille")
             let prenom = saisirChampObligatoire("Prénom")
-            let adresse = saisirChampObligatoire("Adresse")
+            let adresse = saisirChampObligatoire("Adresse complète")
             
             var sexe = ""
             while sexe.isEmpty {
@@ -220,7 +220,7 @@ class GestionScolaire {
                 if let saisie = readLine()?.uppercased(), saisie == "M" || saisie == "F" {
                     sexe = saisie
                 } else {
-                    print("Sexe invalide. Veuillez saisir M ou F.")
+                    print("Sexe invalide. Veuillez saisir M pour Masculin ou F pour Féminin.")
                 }
             }
             
@@ -239,7 +239,7 @@ class GestionScolaire {
             )
             
             etudiants.append(etudiant)
-            print("\nÉTUDIANT AJOUTÉ(E)")
+            print("\nÉTUDIANT INSCRIT AVEC SUCCÈS")
             print("ID: \(nextEtudiantId) | Nom: \(prenom) \(nom) | Sexe: \(sexe) | Classe: \(classe.nom)")
             nextEtudiantId += 1
             continuer = demanderContinuer(action: "ajouter un étudiant")
