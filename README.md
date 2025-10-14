@@ -1,9 +1,9 @@
 # Projet Swift
-Pour le devoir D'intra de SWIFT
+Pour le devoir d'intra du cours IOS
 
-Prepare Par:
+Préparé Par:
 ETIENNE DI-Enilson | 
 FELIX Djeferly
 
-Soumis AU Professeur : 
+Soumis au Professeur : 
 Wilvens PIERRE-LOUIS
