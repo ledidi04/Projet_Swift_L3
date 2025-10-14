@@ -484,10 +484,22 @@ class GestionScolaire {
         var continuer = true
         while continuer {
             print("\n=== NOTES POUR UNE MATIERE ===")
-            guard let classe = choisirClasse() else {
+            // Afficher les classes sans les frais
+            print("\n=== CLASSES DISPONIBLES ===")
+            for (index, classe) in classes.enumerated() {
+                print("\(index + 1). \(classe.nom)")
+            }
+            
+            print("\nChoisir une classe (numero):", terminator: " ")
+            guard let input = readLine(), 
+                let choix = Int(input),
+                choix >= 1 && choix <= classes.count else {
+                print("Choix invalide.")
                 continuer = demanderContinuer(action: "afficher les notes")
                 continue
             }
+            
+            let classe = classes[choix - 1]
             
             let matieres = classe.matieres
             guard !matieres.isEmpty else {
