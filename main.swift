@@ -218,69 +218,89 @@ class GestionScolaire {
         }
     }
     
-    // MARK: - Gestion des étudiants
-    func ajouterEtudiant() {
-        guard !classes.isEmpty else {
-            print("\n❌ Aucune classe configurée. Veuillez d'abord configurer une classe.")
-            return
-        }
-        
-        var continuer = true
-        while continuer {
-            print("\n=== INSCRIPTION D'UN NOUVEL ÉTUDIANT ===")
-            let nom = saisirChampObligatoire("Nom de famille : ")
-            let prenom = saisirChampObligatoire("Prénom : ")
-            let adresse = saisirChampObligatoire("Adresse complète : ")
-            
-            var sexe = ""
-            while sexe.isEmpty {
-                print("Sexe (M/F):", terminator: " ")
-                if let saisie = readLine()?.uppercased(), saisie == "M" || saisie == "F" {
-                    sexe = saisie
-                } else {
-                    print("Sexe invalide. Veuillez saisir M pour Masculin ou F pour Féminin.")
-                }
-            }
-            
-            guard let classe = choisirClasse() else {
-                continuer = demanderContinuer(action: "ajouter un étudiant")
-                continue
-            }
-            
-            let etudiant = Etudiant(
-                id: nextEtudiantId,
-                nom: nom,
-                prenom: prenom,
-                adresse: adresse,
-                sexe: sexe,
-                classe: classe
-            )
-            
-            etudiants.append(etudiant)
-            print("\nÉTUDIANT INSCRIT AVEC SUCCÈS")
-            print("ID: \(nextEtudiantId) | Nom: \(prenom) \(nom) | Sexe: \(sexe) | Classe: \(classe.nom)")
-            nextEtudiantId += 1
-            continuer = demanderContinuer(action: "Ajouter un étudiant")
+  
+private func saisirSexe() -> String {
+    while true { 
+        print("Sexe (M/F):", terminator: " ")
+        if let saisie = readLine()?.uppercased(), ["M", "F"].contains(saisie) {
+            return saisie 
+        } else {
+            print(" Entrée invalide. Veuillez saisir M pour Masculin ou F pour Féminin.")
         }
     }
+}
+
+func ajouterEtudiant() {
+    guard !classes.isEmpty else {
+        print("\n Aucune classe n'est configurée. Veuillez d'abord en créer une.")
+        return
+    }
+    
+    
+    while true {
+        print("\n=== INSCRIPTION D'UN NOUVEL ÉTUDIANT ===")
+     
+        guard let classe = choisirClasse() else {
+            print("Opération annulée. Pas de classe sélectionnée.")
+            break 
+        }
+        
+        let nom = saisirChampObligatoire("Nom de famille : ")
+        let prenom = saisirChampObligatoire("Prénom : ")
+        let adresse = saisirChampObligatoire("Adresse complète : ")
+        
+        
+        let sexe = saisirSexe()
+        
+        let etudiant = Etudiant(
+            id: nextEtudiantId,
+            nom: nom,
+            prenom: prenom,
+            adresse: adresse,
+            sexe: sexe,
+            classe: classe
+        )
+        
+        etudiants.append(etudiant)
+        print("\n ÉTUDIANT INSCRIT AVEC SUCCÈS")
+        print("   ID: \(nextEtudiantId) | Nom: \(prenom) \(nom) | Sexe: \(sexe) | Classe: \(classe.nom)")
+        
+        nextEtudiantId += 1
+        
+       
+        if !demanderContinuer(action: "d'ajouter un autre étudiant") {
+            break
+        }
+    }
+}
 
 
     //fonction permettant de Lister Tous les Etudiants
-    func listerEtudiants() {
-        print("\nLISTE DES ÉTUDIANTS (\(etudiants.count))")
-        guard !etudiants.isEmpty else {
-            print("Aucun étudiant enregistré.")
-            return
-        }
-
-        
-        for etudiant in etudiants {
-            let moyenne = calculerMoyenneGenerale(etudiantId: etudiant.id) ?? 0
-            let moyenneAffichage = moyenne > 0 ? String(format: "%.2f", moyenne) : "Aucune note"
-            let statutPaiement = etudiant.estEnRegle ? "Oui" : "Non"
-            print("ID: \(etudiant.id) | \(etudiant.prenom) \(etudiant.nom) | \(etudiant.classe.nom) | Moyenne: \(moyenneAffichage) | En règle avec l'économat : \(statutPaiement)")
-        }
+func listerEtudiants() {
+    print("\n--- LISTE DES ÉTUDIANTS (\(etudiants.count)) ---")
+    
+    guard !etudiants.isEmpty else {
+        print("Aucun étudiant n'est actuellement enregistré.")
+        return
     }
+    
+    
+    etudiants.forEach { etudiant in
+        let moyenne = calculerMoyenneGenerale(etudiantId: etudiant.id)
+        
+       
+        let moyenneAffichage = (moyenne != nil && moyenne! > 0) ? String(format: "%.2f", moyenne!) : "Aucune note"
+        
+        print("""
+              ID: \(etudiant.id)
+                - Nom complet : \(etudiant.prenom) \(etudiant.nom)
+                - Classe      : \(etudiant.classe.nom)
+                - Moyenne     : \(moyenneAffichage)
+                - En règle    : \(etudiant.estEnRegle ? " Oui" : " Non")
+              ---------------------------------
+              """)
+    }
+}
 
 
 
