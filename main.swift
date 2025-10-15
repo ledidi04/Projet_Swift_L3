@@ -113,7 +113,7 @@ class GestionScolaire {
         return false
     }
     
-    // MARK: - Configuration
+    // Fonction Permettant l'Affichage des Classes
     func afficherClasses() {
         print("\n=== CLASSES DISPONIBLES ===")
         if classes.isEmpty {
@@ -143,27 +143,39 @@ class GestionScolaire {
         }
         return classes[choix - 1]
     }
-    
-    func configurerClasse() {
-        var continuer = true
-        while continuer {
-            print("\n=== CONFIGURATION D'UNE NOUVELLE CLASSE ===")
-            let nomClasse = saisirChampObligatoire("Nom de la classe")
+
+
+    //fonction Permettant la configuration des Classes
+   func configurerClasse() {
+    while true {
+        print("\n=== CONFIGURATION D'UNE NOUVELLE CLASSE ===")
+        let nomClasse = saisirChampObligatoire("Nom de la classe")
+        guard !classes.contains(where: { $0.nom.lowercased() == nomClasse.lowercased() }) else {
+            print("Erreur : Une classe portant le nom '\(nomClasse)' existe déjà.")
             
-            // Vérifier si la classe existe déjà
-            if classes.contains(where: { $0.nom.lowercased() == nomClasse.lowercased() }) {
-                print("Une classe avec ce nom existe déjà.")
-                continuer = demanderContinuer(action: "configurer une classe")
-                continue
+            
+            if !demanderContinuer(action: "de configurer une autre classe") {
+                break
             }
             
-            let frais = saisirDouble("Frais annuels (HTG)")
-            classes.append(Classe(nom: nomClasse, frais: frais))
-            print("Classe '\(nomClasse)' configurée avec \(frais) HTG")
-            continuer = demanderContinuer(action: "configurer une classe")
+            continue
+        }
+        
+        let frais = saisirDouble("Frais annuels (HTG)")
+        let nouvelleClasse = Classe(nom: nomClasse, frais: frais)
+        classes.append(nouvelleClasse)
+        
+        print("Classe '\(nomClasse)' configurée avec succès pour \(frais) HTG.")
+        
+       
+        if !demanderContinuer(action: "de configurer une autre classe") {
+            break
         }
     }
-    
+}
+
+
+    //fonction Permettant la configuration des Matieres de Chaque Classe
     func configurerMatieresPourClasse() {
         guard !classes.isEmpty else {
             print("\nAucune classe configurée. Veuillez d'abord configurer une classe.")
@@ -660,7 +672,7 @@ class GestionScolaire {
         }
     }
     
-    // MARK: - Point d'entrée
+    // MARK: - Point d'entrée du Programme
     func demarrer() {
         while true {
             print("""
