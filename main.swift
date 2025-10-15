@@ -36,6 +36,7 @@ class Etudiant {
     var montantDu: Double { classe.frais }
     var resteAPayer: Double { montantDu - montantPaye }
     var estEnRegle: Bool { resteAPayer <= 0 }
+
     
     init(id: Int, nom: String, prenom: String, adresse: String, sexe: String, classe: Classe) {
         self.id = id
@@ -147,31 +148,36 @@ class GestionScolaire {
 
     //fonction Permettant la configuration des Classes
    func configurerClasse() {
-    while true {
-        print("\n=== CONFIGURATION D'UNE NOUVELLE CLASSE ===")
-        let nomClasse = saisirChampObligatoire("Nom de la classe")
-        guard !classes.contains(where: { $0.nom.lowercased() == nomClasse.lowercased() }) else {
-            print("Erreur : Une classe portant le nom '\(nomClasse)' existe déjà.")
+        var continuer = true
+        while continuer {
+
+            print("\n=== CONFIGURATION D'UNE NOUVELLE CLASSE ===")
+
+            let nomClasse = saisirChampObligatoire("Nom de la classe")
+
             
-            
-            if !demanderContinuer(action: "de configurer une autre classe") {
-                break
+
+            // Vérifier si la classe existe déjà
+                if classes.contains(where: { $0.nom.lowercased() == nomClasse.lowercased() }) {
+                print("Une classe avec ce nom existe déjà.")
+                continuer = demanderContinuer(action: "configurer une classe")
+                continue
+
             }
+
             
-            continue
+
+            let frais = saisirDouble("Frais annuels (HTG)")
+
+            classes.append(Classe(nom: nomClasse, frais: frais))
+
+            print("Classe '\(nomClasse)' configurée avec \(frais) HTG")
+
+            continuer = demanderContinuer(action: "configurer une classe")
+
         }
-        
-        let frais = saisirDouble("Frais annuels (HTG)")
-        let nouvelleClasse = Classe(nom: nomClasse, frais: frais)
-        classes.append(nouvelleClasse)
-        
-        print("Classe '\(nomClasse)' configurée avec succès pour \(frais) HTG.")
-        
-       
-        if !demanderContinuer(action: "de configurer une autre classe") {
-            break
-        }
-    }
+
+    } 
 }
 
 
@@ -222,9 +228,9 @@ class GestionScolaire {
         var continuer = true
         while continuer {
             print("\n=== INSCRIPTION D'UN NOUVEL ÉTUDIANT ===")
-            let nom = saisirChampObligatoire("Nom de famille")
-            let prenom = saisirChampObligatoire("Prénom")
-            let adresse = saisirChampObligatoire("Adresse complète")
+            let nom = saisirChampObligatoire("Nom de famille : ")
+            let prenom = saisirChampObligatoire("Prénom : ")
+            let adresse = saisirChampObligatoire("Adresse complète : ")
             
             var sexe = ""
             while sexe.isEmpty {
@@ -254,7 +260,7 @@ class GestionScolaire {
             print("\nÉTUDIANT INSCRIT AVEC SUCCÈS")
             print("ID: \(nextEtudiantId) | Nom: \(prenom) \(nom) | Sexe: \(sexe) | Classe: \(classe.nom)")
             nextEtudiantId += 1
-            continuer = demanderContinuer(action: "ajouter un étudiant")
+            continuer = demanderContinuer(action: "Ajouter un étudiant")
         }
     }
 
@@ -266,6 +272,7 @@ class GestionScolaire {
             print("Aucun étudiant enregistré.")
             return
         }
+
         
         for etudiant in etudiants {
             let moyenne = calculerMoyenneGenerale(etudiantId: etudiant.id) ?? 0
@@ -276,6 +283,9 @@ class GestionScolaire {
     }
 
 
+
+
+    
     //fonction Permettant de Lister Les Etudiants Par Classe
     func listerEtudiantsParClasse() {
         guard !classes.isEmpty else {
@@ -287,7 +297,7 @@ class GestionScolaire {
         while continuer {
             print("\n=== LISTER ÉTUDIANTS PAR CLASSE ===")
             // Afficher les classes sans frais
-            print("\n=== CLASSES DISPONIBLES ===")
+            print("\n===== CLASSES DISPONIBLES =====")
             if classes.isEmpty {
                 print("Aucune classe configurée")
             } else {
@@ -330,11 +340,13 @@ class GestionScolaire {
         }
     }
     
-    // MARK: - Gestion des notes
+    // fonction Permettant de rechercher Un(e) Etudiant(e)
     func rechercherEtudiant(id: Int) -> Etudiant? {
         return etudiants.first { $0.id == id }
     }
-    
+
+
+     // fonction Permettant de Calculer La Moyenne Generale
     func calculerMoyenneGenerale(etudiantId: Int) -> Double? {
         guard let etudiant = rechercherEtudiant(id: etudiantId) else {
             return nil
@@ -355,7 +367,9 @@ class GestionScolaire {
         }
         return totalCoefficients > 0 ? totalPoints / totalCoefficients : nil
     }
-    
+
+
+    //Fonction Permettant d'ajouter Une Note
     func ajouterNote() {
             guard !etudiants.isEmpty else {
                 print("\n❌ Aucun étudiant enregistré.")
@@ -410,6 +424,8 @@ class GestionScolaire {
                 continuer = demanderContinuer(action: "ajouter des notes")
             }
         }
+
+
         
         // MARK: - Gestion financière
         func ajouterTransaction(description: String, montant: Double, type: String, etudiantId: Int? = nil) {
@@ -567,6 +583,9 @@ class GestionScolaire {
             continuer = demanderContinuer(action: "afficher les notes")
         }
     }
+
+
+
     
     // MARK: - Menus
     func menuEtudiants() {
@@ -640,7 +659,10 @@ class GestionScolaire {
             }
         }
     }
-    
+
+
+
+    //Fonction Permettant D'Afficher Les Transactions
    func afficherTransactions() {
         print("\n=== HISTORIQUE DES TRANSACTIONS (\(transactions.count)) ===")
         if transactions.isEmpty {
